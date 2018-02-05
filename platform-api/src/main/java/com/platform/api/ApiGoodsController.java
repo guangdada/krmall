@@ -268,6 +268,7 @@ public class ApiGoodsController extends ApiBaseAction {
         CategoryVo parentCategory = categoryService.queryObject(currentCategory.getParent_id());
         Map params = new HashMap();
         params.put("parent_id", currentCategory.getParent_id());
+        params.put("isShow", 1);
         List<CategoryVo> brotherCategory = categoryService.queryList(params);
         //
         resultObj.put("currentCategory", currentCategory);
