@@ -45,28 +45,66 @@ public class ApiIndexController extends ApiBaseAction {
     @RequestMapping("index")
     public Object index() {
         Map<String, Object> resultObj = new HashMap();
-        //
-        Map param = new HashMap();
-        param.put("ad_position_id", 1);
-        List<AdVo> banner = adService.queryList(param);
+        // 商品分类
+        Map params = new HashMap();
+        params.put("page", 1);
+        params.put("limit", 4);
+        params.put("sidx", "show_index");
+        params.put("order", "asc");
+        params.put("parent_id", 0);
+        params.put("isShow", 1);
+        //查询列表数据
+        List<CategoryVo> data = categoryService.queryList(params);
+        resultObj.put("categoryList", data);
+        
+        // 轮播图
+        params = new HashMap();
+        params.put("ad_position_id", 1);
+        List<AdVo> banner = adService.queryList(params);
         resultObj.put("banner", banner);
-        //
-        param = new HashMap();
+        
+        // 限时团购广告
+        params = new HashMap();
+        params.put("ad_position_id", 2);
+        List<AdVo> ad2 = adService.queryList(params);
+        resultObj.put("groupAd", ad2);
+        
+        //显示团购商品
+        params = new HashMap();
+        params.put("offset", 0);
+        params.put("limit", 10);
+        List<GoodsGroupVo> goodsGroupVos = goodsGroupService.queryList(params);
+        resultObj.put("groupGoodsList", goodsGroupVos);
+        
+        // 精品秒杀商品（暂时用热卖商品代替）
+        params = new HashMap();
+        params.put("is_hot", "1");
+        params.put("offset", 0);
+        params.put("limit", 3);
+        params.put("is_delete", 0);
+        params.put("is_on_sale", 1);
+        List<GoodsVo> hotGoods = goodsService.queryHotGoodsList(params);
+        resultObj.put("hotGoodsList", hotGoods);
+        
+        
+        //频道
+        /*param = new HashMap();
         param.put("sidx", "sort_order ");
         param.put("order", "asc ");
         List<ChannelVo> channel = channelService.queryList(param);
-        resultObj.put("channel", channel);
-        //
-        param = new HashMap();
+        resultObj.put("channel", channel);*/
+        //最新商品
+        /*param = new HashMap();
         param.put("is_new", 1);
         param.put("offset", 0);
         param.put("limit", 4);
         param.put("is_delete", 0);
         param.put("fields", "id, name, list_pic_url, retail_price");
-//        List<GoodsVo> newGoods = goodsService.queryList(param);
-//        resultObj.put("newGoodsList", newGoods);
-        //
-        param = new HashMap();
+        List<GoodsVo> newGoods = goodsService.queryList(param);
+        resultObj.put("newGoodsList", newGoods);*/
+        
+        //最热商品
+        /*param = new HashMap();
         param.put("is_hot", "1");
         param.put("offset", 0);
         param.put("limit", 3);
@@ -89,7 +127,7 @@ public class ApiIndexController extends ApiBaseAction {
                     }
                 }
             }
-        }
+        }*/
         //
 //        param = new HashMap();
 //        param.put("is_new", 1);
