@@ -1,7 +1,17 @@
 package com.platform.api;
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.commons.collections.MapUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.alibaba.fastjson.JSONObject;
-import com.qiniu.util.StringUtils;
 import com.platform.annotation.IgnoreAuth;
 import com.platform.entity.FullUserInfo;
 import com.platform.entity.UserInfo;
@@ -14,15 +24,7 @@ import com.platform.util.CommonUtil;
 import com.platform.utils.CharUtil;
 import com.platform.utils.R;
 import com.platform.validator.Assert;
-import org.apache.commons.collections.MapUtils;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import com.qiniu.util.StringUtils;
 
 /**
  * API登录授权
@@ -34,7 +36,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/auth")
 public class ApiAuthController extends ApiBaseAction {
-    private Logger logger = Logger.getLogger(getClass());
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private ApiUserService userService;
     @Autowired
@@ -91,26 +93,9 @@ public class ApiAuthController extends ApiBaseAction {
         if (!fullUserInfo.getSignature().equals(sha1)) {
             return toResponsFail("登录失败");
         }
-        Date nowTime = new Date();
-        UserVo userVo = userService.queryByOpenId(sessionData.getString("openid"));
-        if (null == userVo) {
-            userVo = new UserVo();
-            userVo.setUsername("微信用户" + CharUtil.getRandomString(12));
-            userVo.setPassword(sessionData.getString("openid"));
-            userVo.setRegister_time(nowTime);
-            userVo.setRegister_ip(this.getClientIp());
-            userVo.setLast_login_ip(userVo.getRegister_ip());
-            userVo.setLast_login_time(userVo.getRegister_time());
-            userVo.setWeixin_openid(sessionData.getString("openid"));
-            userVo.setAvatar(userInfo.getAvatarUrl());
-            userVo.setGender(userInfo.getGender()); // //性别 0：未知、1：男、2：女
-            userVo.setNickname(userInfo.getNickName());
-            userService.save(userVo);
-        } else {
-            userVo.setLast_login_ip(this.getClientIp());
-            userVo.setLast_login_time(nowTime);
-            userService.update(userVo);
-        }
+        
+        // 保存用户登录信息
+        UserVo userVo = saveUser(userInfo, sessionData);
 
         Map<String, Object> tokenMap = tokenService.createToken(userVo.getUserId());
         String token = MapUtils.getString(tokenMap, "token");
@@ -124,4 +109,32 @@ public class ApiAuthController extends ApiBaseAction {
         resultObj.put("userId", userVo.getUserId());
         return toResponsSuccess(resultObj);
     }
+
+	private UserVo saveUser(UserInfo userInfo, JSONObject sessionData) {
+		String openid = sessionData.getString("openid");
+		synchronized (openid.intern()) {
+			logger.info("saveUser openid :{}",openid);
+			Date nowTime = new Date();
+			UserVo userVo = userService.queryByOpenId(openid);
+			if (null == userVo) {
+				userVo = new UserVo();
+				userVo.setUsername("微信用户" + CharUtil.getRandomString(12));
+				userVo.setPassword(sessionData.getString("openid"));
+				userVo.setRegister_time(nowTime);
+				userVo.setRegister_ip(this.getClientIp());
+				userVo.setLast_login_ip(userVo.getRegister_ip());
+				userVo.setLast_login_time(userVo.getRegister_time());
+				userVo.setWeixin_openid(sessionData.getString("openid"));
+				userVo.setAvatar(userInfo.getAvatarUrl());
+				userVo.setGender(userInfo.getGender()); // //性别 0：未知、1：男、2：女
+				userVo.setNickname(userInfo.getNickName());
+				userService.save(userVo);
+			} else {
+				userVo.setLast_login_ip(this.getClientIp());
+				userVo.setLast_login_time(nowTime);
+				userService.update(userVo);
+			}
+			return userVo;
+		}
+	}
 }

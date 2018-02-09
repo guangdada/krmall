@@ -88,11 +88,11 @@ public class ApiIndexController extends ApiBaseAction {
         
         
         //频道
-        /*param = new HashMap();
-        param.put("sidx", "sort_order ");
-        param.put("order", "asc ");
-        List<ChannelVo> channel = channelService.queryList(param);
-        resultObj.put("channel", channel);*/
+        params = new HashMap();
+        params.put("sidx", "sort_order ");
+        params.put("order", "asc ");
+        List<ChannelVo> channel = channelService.queryList(params);
+        resultObj.put("channel", channel);
         //最新商品
         /*param = new HashMap();
         param.put("is_new", 1);
