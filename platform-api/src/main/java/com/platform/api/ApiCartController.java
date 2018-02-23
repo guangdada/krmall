@@ -46,6 +46,7 @@ public class ApiCartController extends ApiBaseAction {
      */
     @RequestMapping("getCart")
     public Object getCart(@LoginUser UserVo loginUser) {
+    	
         Map<String, Object> resultObj = new HashMap();
         //查询列表数据
         Map param = new HashMap();
