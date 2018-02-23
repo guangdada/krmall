@@ -72,15 +72,15 @@ public class ApiOrderService {
 
         Integer couponId = jsonParam.getInteger("couponId");
         String couponNumber = jsonParam.getString("couponNumber");
-        BigDecimal fullCutCouponDec = jsonParam.getBigDecimal("fullCutCouponDec");
+        /*BigDecimal fullCutCouponDec = jsonParam.getBigDecimal("fullCutCouponDec");
         if(fullCutCouponDec == null ){
             fullCutCouponDec = BigDecimal.valueOf(0);
-        }
+        }*/
         String postscript = jsonParam.getString("postscript");
 //        AddressVo addressVo = jsonParam.getObject("checkedAddress",AddressVo.class);
-        AddressVo addressVo = apiAddressMapper.queryObject(jsonParam.getInteger("addressId"));
+        //AddressVo addressVo = apiAddressMapper.queryObject(jsonParam.getInteger("addressId"));
 
-        Integer freightPrice = 10;
+        //Integer freightPrice = 10;
         //获取要购买的商品
         Map param = new HashMap();
         param.put("user_id", loginUser.getUserId());
@@ -107,7 +107,7 @@ public class ApiOrderService {
             }
         }
         // 获取优惠信息提示
-        Map couponParam = new HashMap();
+        /*Map couponParam = new HashMap();
         couponParam.put("enabled", true);
         Integer[] send_types = new Integer[]{7};
         couponParam.put("send_types", send_types);
@@ -119,32 +119,31 @@ public class ApiOrderService {
                     freightPrice = 0;
                 }
             }
-        }
+        }*/
         //订单价格计算
-        BigDecimal orderTotalPrice = goodsTotalPrice.add(new BigDecimal(freightPrice)); //订单的总价
+        //BigDecimal orderTotalPrice = goodsTotalPrice.add(new BigDecimal(freightPrice)); //订单的总价
+        BigDecimal orderTotalPrice = goodsTotalPrice.add(new BigDecimal(0)); //订单的总价
 
-        BigDecimal actualPrice = orderTotalPrice.subtract(fullCutCouponDec).subtract(couponPrice);  //减去其它支付的金额后，要实际支付的金额
-
-        Long currentTime = System.currentTimeMillis() / 1000;
-
-        //
+        //BigDecimal actualPrice = orderTotalPrice.subtract(fullCutCouponDec).subtract(couponPrice);  //减去其它支付的金额后，要实际支付的金额
+        BigDecimal actualPrice = orderTotalPrice.subtract(couponPrice);  //减去其它支付的金额后，要实际支付的金额
+        //保存订单信息
         OrderVo orderInfo = new OrderVo();
         orderInfo.setOrder_sn(CommonUtil.generateOrderNumber());
         orderInfo.setUser_id(loginUser.getUserId());
         //收货地址和运费
-        orderInfo.setConsignee(addressVo.getUserName());
+        /*orderInfo.setConsignee(addressVo.getUserName());
         orderInfo.setMobile(addressVo.getTelNumber());
         orderInfo.setCountry(addressVo.getNationalCode());
         orderInfo.setProvince(addressVo.getProvinceName());
         orderInfo.setCity(addressVo.getCityName());
         orderInfo.setDistrict(addressVo.getCountyName());
-        orderInfo.setAddress(addressVo.getDetailInfo());
-        //
-        orderInfo.setFreight_price(freightPrice);
+        orderInfo.setAddress(addressVo.getDetailInfo());*/
+        //运费
+        /*orderInfo.setFreight_price(freightPrice);*/
         //留言
         orderInfo.setPostscript(postscript);
         //使用的优惠券
-        orderInfo.setFull_cut_price(fullCutCouponDec);
+        //orderInfo.setFull_cut_price(fullCutCouponDec);
         orderInfo.setCoupon_id(couponId);
         orderInfo.setCoupon_price(couponPrice);
         orderInfo.setAdd_time(new Date());

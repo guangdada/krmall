@@ -25,6 +25,9 @@
     <select id="queryList" resultMap="addressMap">
         select * from nideshop_address
         <where>
+        	<if test="id != null">
+	        	AND id = #{id}
+	        </if>
             <if test="user_id != null">
                 and user_id = #{user_id}
             </if>
