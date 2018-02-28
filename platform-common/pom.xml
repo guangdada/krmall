@@ -16,6 +16,7 @@
         <qcloud-cos-version>4.4</qcloud-cos-version>
         <jackson.version>2.5.0</jackson.version>
         <poi.version>3.15</poi.version>
+        <ehcache.version>2.5.6</ehcache.version>
     </properties>
 
     <dependencies>
@@ -126,5 +127,30 @@
             </exclusions>
         </dependency>
         <!-- POI依赖 ，处理EXCEL WORD  PDF-->
+<!--         <dependency>
+            <groupId>org.ehcache</groupId>
+            <artifactId>ehcache</artifactId>
+            <version>${ehcache.version}</version>
+        </dependency> -->
+        <!-- CACHE begin -->
+		<!-- ehcache -->
+		<dependency>
+			<groupId>net.sf.ehcache</groupId>
+			<artifactId>ehcache-core</artifactId>
+			<version>${ehcache.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>net.sf.ehcache</groupId>
+			<artifactId>ehcache-web</artifactId>
+			<version>2.0.4</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>ehcache-core</artifactId>
+					<groupId>net.sf.ehcache</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<!-- CACHE end -->
     </dependencies>
 </project>

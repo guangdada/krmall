@@ -80,6 +80,17 @@ public class GoodsVo implements Serializable {
     // 冗余
     // 产品Id
     private Integer product_id;
+    
+    //是否拼团购
+    private Integer is_group;
+    //拼团购数量
+    private Integer group_num;
+    //是否限时购
+    private Integer is_limitTime;
+    //限时购付款时间
+    private String limitTime;
+    //配货时间
+    private String arrival_date;
 
     public Integer getId() {
         return id;
@@ -344,4 +355,45 @@ public class GoodsVo implements Serializable {
     public void setMarket_price(BigDecimal market_price) {
         this.market_price = market_price;
     }
+
+	public Integer getIs_group() {
+		return is_group;
+	}
+
+	public void setIs_group(Integer is_group) {
+		this.is_group = is_group;
+	}
+
+	public Integer getGroup_num() {
+		return group_num;
+	}
+
+	public void setGroup_num(Integer group_num) {
+		this.group_num = group_num;
+	}
+
+	public Integer getIs_limitTime() {
+		return is_limitTime;
+	}
+
+	public void setIs_limitTime(Integer is_limitTime) {
+		this.is_limitTime = is_limitTime;
+	}
+
+	public String getLimitTime() {
+		return limitTime;
+	}
+
+	public void setLimitTime(String limitTime) {
+		this.limitTime = limitTime;
+	}
+
+	public String getArrival_date() {
+		return arrival_date;
+	}
+
+	public void setArrival_date(String arrival_date) {
+		this.arrival_date = arrival_date;
+	}
+    
 }

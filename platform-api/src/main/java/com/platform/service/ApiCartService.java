@@ -156,7 +156,7 @@ public class ApiCartService {
     }
 
     public void deleteByCart(Long user_id, Integer session_id, Integer checked) {
-        cartDao.deleteByCart(user_id, session_id, checked);
+        cartDao.deleteByCart(user_id, session_id, checked,null);
     }
 
 }

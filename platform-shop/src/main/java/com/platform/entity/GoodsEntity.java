@@ -39,6 +39,8 @@ public class GoodsEntity implements Serializable {
     private Date addTime;
     //修改时间
     private Date updateTime;
+    //到货时间
+    private Date arrivalDate;
     //排序
     private Integer sortOrder;
     //删除状态
@@ -79,6 +81,15 @@ public class GoodsEntity implements Serializable {
     private Integer isHot;
     //市场价
     private BigDecimal marketPrice;
+    //是否拼团购
+    private Integer isGroup;
+    //拼团购数量
+    private Integer groupNum;
+    //是否限时购
+    private Integer isLimitTime;
+    //限时购付款时间
+    private Date limitTime;
+    
     /**
      * 用户ID
      */
@@ -604,4 +615,46 @@ public class GoodsEntity implements Serializable {
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
+
+	public Date getArrivalDate() {
+		return arrivalDate;
+	}
+
+	public void setArrivalDate(Date arrivalDate) {
+		this.arrivalDate = arrivalDate;
+	}
+
+	public Integer getIsGroup() {
+		return isGroup;
+	}
+
+	public void setIsGroup(Integer isGroup) {
+		this.isGroup = isGroup;
+	}
+
+	public Integer getGroupNum() {
+		return groupNum;
+	}
+
+	public void setGroupNum(Integer groupNum) {
+		this.groupNum = groupNum;
+	}
+
+	public Integer getIsLimitTime() {
+		return isLimitTime;
+	}
+
+	public void setIsLimitTime(Integer isLimitTime) {
+		this.isLimitTime = isLimitTime;
+	}
+
+	public Date getLimitTime() {
+		return limitTime;
+	}
+
+	public void setLimitTime(Date limitTime) {
+		this.limitTime = limitTime;
+	}
+    
+	
 }

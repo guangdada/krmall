@@ -44,9 +44,9 @@ public class ApiIndexController extends ApiBaseAction {
     @IgnoreAuth
     @RequestMapping("index")
     public Object index() {
-        Map<String, Object> resultObj = new HashMap();
+        Map<String, Object> resultObj = new HashMap<String,Object>();
         // 商品分类
-        Map params = new HashMap();
+        Map<String,Object> params = new HashMap<String,Object>();
         params.put("page", 1);
         params.put("limit", 4);
         params.put("sidx", "show_index");
@@ -58,41 +58,50 @@ public class ApiIndexController extends ApiBaseAction {
         resultObj.put("categoryList", data);
         
         // 轮播图
-        params = new HashMap();
+        params = new HashMap<String,Object>();
         params.put("ad_position_id", 1);
         List<AdVo> banner = adService.queryList(params);
         resultObj.put("banner", banner);
         
         // 限时团购广告
-        params = new HashMap();
+        params = new HashMap<String,Object>();
         params.put("ad_position_id", 2);
         List<AdVo> ad2 = adService.queryList(params);
         resultObj.put("groupAd", ad2);
         
-        //显示团购商品
-        params = new HashMap();
+        // 拼团购
+        /*params = new HashMap<String,Object>();
         params.put("offset", 0);
         params.put("limit", 10);
         List<GoodsGroupVo> goodsGroupVos = goodsGroupService.queryList(params);
-        resultObj.put("groupGoodsList", goodsGroupVos);
-        
-        // 精品秒杀商品（暂时用热卖商品代替）
-        params = new HashMap();
-        params.put("is_hot", "1");
+        resultObj.put("groupGoodsList", goodsGroupVos);*/
+        // 拼团购
+        params = new HashMap<String,Object>();
+        params.put("is_group", "1");
         params.put("offset", 0);
         params.put("limit", 3);
         params.put("is_delete", 0);
         params.put("is_on_sale", 1);
-        List<GoodsVo> hotGoods = goodsService.queryHotGoodsList(params);
+        List<GoodsVo> goodsGroupVos = goodsService.queryList(params);
+        resultObj.put("groupGoodsList", goodsGroupVos);
+        
+        // 限时购
+        params = new HashMap<String,Object>();
+        params.put("is_limitTime", "1");
+        params.put("offset", 0);
+        params.put("limit", 3);
+        params.put("is_delete", 0);
+        params.put("is_on_sale", 1);
+        List<GoodsVo> hotGoods = goodsService.queryList(params);
         resultObj.put("hotGoodsList", hotGoods);
         
         
         //频道
-        params = new HashMap();
+/*        params = new HashMap();
         params.put("sidx", "sort_order ");
         params.put("order", "asc ");
         List<ChannelVo> channel = channelService.queryList(params);
-        resultObj.put("channel", channel);
+        resultObj.put("channel", channel);*/
         //最新商品
         /*param = new HashMap();
         param.put("is_new", 1);

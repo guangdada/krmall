@@ -216,6 +216,9 @@
             </Tab-Pane>
             <Tab-Pane label="其他信息" name="name3">
                 <i-form ref="formValidate" :model="goods" :rules="ruleValidate" :label-width="80">
+                    <Form-item label="到货时间" prop="arrivalDate">
+		                <Date-picker v-model="goods.arrivalDate" placeholder="到货时间"></Date-picker>
+		            </Form-item>
                     <Form-item label="排序" prop="sortOrder">
                         <Input-number :min="0" :step="1" v-model="goods.sortOrder" placeholder="排序"
                                       style="width: 188px;"/>
@@ -250,6 +253,33 @@
                             </Radio>
                         </Radio-group>
                     </Form-item>
+                    <Form-item label="是否拼团" prop="isGroup">
+                        <Radio-group v-model="goods.isGroup">
+                            <Radio label="1">
+                                <span>是</span>
+                            </Radio>
+                            <Radio label="0">
+                                <span>否</span>
+                            </Radio>
+                        </Radio-group>
+                    </Form-item>
+                    <Form-item label="拼团数量" prop="groupNum">
+                        <Input-number :min="0" :step="1" v-model="goods.groupNum" placeholder="拼团数量"
+                                      style="width: 188px;"/>
+                    </Form-item>
+                    <Form-item label="限时购" prop="isLimitTime">
+                        <Radio-group v-model="goods.isLimitTime">
+                            <Radio label="1">
+                                <span>是</span>
+                            </Radio>
+                            <Radio label="0">
+                                <span>否</span>
+                            </Radio>
+                        </Radio-group>
+                    </Form-item>
+                    <Form-item label="限时购时间" prop="limitTime">
+		                <Date-picker v-model="goods.limitTime" placeholder="限时购时间"></Date-picker>
+		            </Form-item>
                     <Form-item label="推广描述" prop="promotionDesc">
                         <i-input v-model="goods.promotionDesc" placeholder="推广描述"/>
                     </Form-item>

@@ -172,6 +172,7 @@
     <delete id="deleteByCart">
         delete from nideshop_cart
         where  user_id = #{user_id} and  session_id = #{session_id} and  checked = #{checked}
+        <if test="product_id != null">and `product_id` = #{product_id}</if>
     </delete>
 
 </mapper>

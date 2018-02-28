@@ -6,4 +6,8 @@
 
     <bean id="cacheUtil" class="com.platform.cache.CacheUtil"/>
     <bean id="regionCacheUtil" class="com.platform.cache.RegionCacheUtil"/>
+   	<bean id="ehCacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+		<property name="configLocation" value="classpath:/ehcache.xml" />
+		<property name="shared" value="true" />
+	</bean>
 </beans>

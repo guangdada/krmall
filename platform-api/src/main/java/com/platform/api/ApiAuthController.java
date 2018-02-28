@@ -104,6 +104,7 @@ public class ApiAuthController extends ApiBaseAction {
             return toResponsFail("登录失败");
         }
 
+        resultObj.put("mobile", userVo.getMobile());
         resultObj.put("token", token);
         resultObj.put("userInfo", userInfo);
         resultObj.put("userId", userVo.getUserId());

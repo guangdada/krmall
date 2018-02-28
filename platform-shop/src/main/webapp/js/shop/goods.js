@@ -120,6 +120,7 @@ var vm = new Vue({
             vm.reload();
         },
         add: function () {
+        	console.log("添加商品跳转");
             vm.showList = false;
             vm.title = "新增";
             vm.uploadList = [];
