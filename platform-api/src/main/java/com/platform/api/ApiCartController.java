@@ -1,23 +1,34 @@
 package com.platform.api;
 
-import com.alibaba.fastjson.JSONObject;
-import com.qiniu.util.StringUtils;
-import com.platform.annotation.LoginUser;
-import com.platform.dto.CouponInfoVo;
-import com.platform.entity.*;
-import com.platform.service.*;
-import com.platform.util.ApiBaseAction;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.alibaba.fastjson.JSONObject;
+import com.platform.annotation.LoginUser;
+import com.platform.entity.CartVo;
+import com.platform.entity.CouponVo;
+import com.platform.entity.GoodsSpecificationVo;
+import com.platform.entity.GoodsVo;
+import com.platform.entity.ProductVo;
+import com.platform.entity.UserCouponVo;
+import com.platform.entity.UserVo;
+import com.platform.service.ApiAddressService;
+import com.platform.service.ApiCartService;
+import com.platform.service.ApiCouponService;
+import com.platform.service.ApiGoodsCrashService;
+import com.platform.service.ApiGoodsService;
+import com.platform.service.ApiGoodsSpecificationService;
+import com.platform.service.ApiProductService;
+import com.platform.service.ApiUserCouponService;
+import com.platform.util.ApiBaseAction;
+import com.qiniu.util.StringUtils;
 
 /**
  * 作者: @author Harmon <br>
