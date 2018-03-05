@@ -1,23 +1,34 @@
 package com.platform.api;
 
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
-import com.platform.annotation.IgnoreAuth;
 import com.platform.annotation.LoginUser;
+import com.platform.entity.PointTradeVo;
 import com.platform.entity.SmsLogVo;
 import com.platform.entity.UserVo;
+import com.platform.service.ApiPointTradeService;
+import com.platform.service.ApiSignService;
+import com.platform.service.ApiUserCouponService;
 import com.platform.service.ApiUserService;
 import com.platform.util.ApiBaseAction;
+import com.platform.util.ApiPageUtils;
 import com.platform.utils.CharUtil;
+import com.platform.utils.DateUtil;
+import com.platform.utils.Query;
 import com.platform.utils.cache.CacheUtil;
 import com.platform.utils.sms.MsgUtils;
 import com.platform.utils.sms.SmsAlidayu;
@@ -30,19 +41,72 @@ import com.platform.utils.sms.SmsAlidayu;
 @RestController
 @RequestMapping("/api/user")
 public class ApiUserController extends ApiBaseAction {
+	private static Logger logger = LoggerFactory.getLogger(ApiUserController.class);
 	@Autowired
 	private ApiUserService userService;
+	@Autowired
+	private ApiUserCouponService apiUserCouponService;
+	@Autowired
+	private ApiSignService apiSignService;
+	@Autowired
+	private ApiPointTradeService apiPointTradeService;
 
-	/**
-	 */
-	@IgnoreAuth
 	@RequestMapping("info")
-	public Object info(@LoginUser UserVo loginUser, String mobile) {
-		Map param = new HashMap();
-		param.put("mobile", mobile);
-		UserVo user = userService.queryByMobile(mobile);
-		user.setPassword("");
-		return user;
+	public Object info(@LoginUser UserVo loginUser) {
+		Map<String, Object> resultObj = new HashMap<String, Object>();
+		resultObj.put("points", loginUser.getPoints());
+		resultObj.put("mobile", loginUser.getMobile());
+		resultObj.put("nickname", loginUser.getNickname());
+		resultObj.put("avatar", loginUser.getAvatar());
+		
+		String nowDateStr = DateUtil.getDay(new Date());
+		String signDateStr = loginUser.getSignDate() == null ? "" : DateUtil.getDay(loginUser.getSignDate());
+		// 如果最后签到日期是今天，提示今天已经签到过， 不做后续处理
+		if (nowDateStr.equals(signDateStr)) {
+			resultObj.put("signed", nowDateStr.equals(signDateStr) ? 1 : 0);
+		} 
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("user_id", loginUser.getUserId());
+		map.put("order_id", 0); // 未使用状态
+		int coupons = apiUserCouponService.queryTotal(map);
+		resultObj.put("coupons", coupons);
+
+		return toResponsSuccess(resultObj);
+	}
+
+	@RequestMapping("sign")
+	public Object sign(@LoginUser UserVo loginUser) {
+		Map<String, Object> obj = new HashMap<String, Object>();
+		try {
+			obj = apiSignService.submit(loginUser);
+		} catch (Exception e) {
+			logger.info("签到失败:", e);
+			return toResponsFail("签到失败");
+		}
+
+		if(obj.get("errno").toString().equals("1")){
+			return toResponsFail(obj.get("errmsg").toString());
+		}else{
+			return toResponsSuccess(obj);
+		}
+	}
+
+	@RequestMapping("pointlog")
+	public Object pointlog(@LoginUser UserVo loginUser, @RequestParam(value = "page", defaultValue = "1") Integer page,
+			@RequestParam(value = "size", defaultValue = "10") Integer size) {
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("page", page);
+		param.put("limit", size);
+		param.put("sidx", "id");
+		param.put("order", "desc");
+		param.put("user_id", loginUser.getUserId());
+		Query query = new Query(param);
+
+		List<PointTradeVo> pointTrades = apiPointTradeService.queryList(query);
+		int total = apiPointTradeService.queryTotal(query);
+		ApiPageUtils pageUtil = new ApiPageUtils(pointTrades, total, query.getLimit(), query.getPage());
+		return toResponsSuccess(pageUtil);
 	}
 
 	/**
@@ -128,7 +192,7 @@ public class ApiUserController extends ApiBaseAction {
 		if (null != smsLogVo && (System.currentTimeMillis() / 1000 - smsLogVo.getLog_date()) < 1 * 60) {
 			return toResponsFail("短信已发送");
 		}
-				
+
 		// 发送短信
 		int max = 999999;
 		int min = 100000;
@@ -137,7 +201,7 @@ public class ApiUserController extends ApiBaseAction {
 		String msgContent = "【小区驿站】您的验证码是：" + msgcode;
 		// 调用发送短信接口
 		MsgUtils.request(mobile, msgContent);
-		
+
 		smsLogVo = new SmsLogVo();
 		smsLogVo.setLog_date(System.currentTimeMillis() / 1000);
 		smsLogVo.setUser_id(loginUser.getUserId());
@@ -146,7 +210,8 @@ public class ApiUserController extends ApiBaseAction {
 		smsLogVo.setSms_text(msgContent);
 		userService.saveSmsCodeLog(smsLogVo);
 
-		//CacheUtil.put(CacheUtil.registerMsgCode, loginUser.getWeixin_openid(), msgcode);
+		// CacheUtil.put(CacheUtil.registerMsgCode,
+		// loginUser.getWeixin_openid(), msgcode);
 		// 移除验证码
 		CacheUtil.remove(CacheUtil.registerImgCode, loginUser.getWeixin_openid());
 		return toResponsSuccess("短信发送成功");
@@ -184,24 +249,26 @@ public class ApiUserController extends ApiBaseAction {
 		if (null == smsLogVo || !smsLogVo.getPhone().equals(mobile) || !smsLogVo.getSms_code().equals(mobileCode)) {
 			return toResponsFail("短信码输入错误");
 		}
-		/*String msgcode = CacheUtil.get(CacheUtil.registerMsgCode, loginUser.getWeixin_openid());
-		if (msgcode == null || !msgcode.equals(mobileCode)) {
-			return toResponsFail("短信码输入错误");
-		}*/
-		
+		/*
+		 * String msgcode = CacheUtil.get(CacheUtil.registerMsgCode,
+		 * loginUser.getWeixin_openid()); if (msgcode == null ||
+		 * !msgcode.equals(mobileCode)) { return toResponsFail("短信码输入错误"); }
+		 */
+
 		// 判断手机是否已经被绑定过
 		UserVo user = userService.queryByMobile(mobile);
-		if(user != null){
+		if (user != null) {
 			return toResponsFail("该手机已经被占用了！");
-		}else{
+		} else {
 			// 修改手机号
 			loginUser.setMobile(mobile);
 			userService.update(loginUser);
 		}
-		
+
 		// 移除短信码
-		//CacheUtil.remove(CacheUtil.registerMsgCode, loginUser.getWeixin_openid());
-		
+		// CacheUtil.remove(CacheUtil.registerMsgCode,
+		// loginUser.getWeixin_openid());
+
 		return toResponsSuccess("绑定成功！");
 	}
 

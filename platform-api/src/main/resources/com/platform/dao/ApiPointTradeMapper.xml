@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.platform.dao.ApiPointTradeMapper">
+	<resultMap type="com.platform.entity.PointTradeVo" id="pointTradeMap">
+        <result property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="item_pic_url" column="item_pic_url"/>
+        <result property="market_price" column="market_price"/>
+        <result property="goods_id" column="goods_id"/>
+        <result property="sort_order" column="sort_order"/>
+        <result property="subtitle" column="subtitle"/>
+        <result property="assist_count" column="assist_count"/>
+        <result property="retail_price" column="retail_price"/>
+    </resultMap>
+    
+    <insert id="save" parameterType="com.platform.entity.PointTradeVo" useGeneratedKeys="true" keyProperty="id">
+		insert into nideshop_point_trade
+		(
+			`user_id`,
+			`coupon_id`,
+			`sign_id`,
+			`in_out`,
+			`point`,
+			`tag`
+		)
+		values
+		(
+			#{userId},
+			#{couponId},
+			#{signId},
+			#{inOut},
+			#{point},
+			#{tag}
+		)
+	</insert>
+	
+	<select id="queryList" resultMap="pointTradeMap">
+        SELECT * from nideshop_point_trade
+        where 1 = 1
+        <if test="user_id != null">
+            AND user_id = #{user_id}
+        </if>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+            <otherwise>
+                order by a.id desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="queryTotal" resultType="int">
+        select count(*) from nideshop_point_trade
+        WHERE 1=1
+        <if test="user_id != null">
+            AND user_id = #{user_id}
+        </if>
+    </select>
+</mapper>

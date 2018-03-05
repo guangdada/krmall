@@ -23,6 +23,42 @@
     <select id="queryByCouponNumber" resultMap="userCouponMap">
         select * from nideshop_user_coupon where coupon_number = #{coupon_number}
     </select>
+    
+    <select id="queryListMap" resultType="map">
+        select a.*,b.type_money,b.`name`,DATE_FORMAT(b.use_start_date,'%Y-%m-%d') as use_start_date
+,DATE_FORMAT(b.use_end_date,'%Y-%m-%d') as use_end_date,b.min_goods_amount from nideshop_user_coupon a
+        left join nideshop_coupon b on b.id = a.coupon_id
+        where 1 = 1
+        <if test="coupon_number != null">
+            and a.coupon_number = #{coupon_number}
+        </if>
+        <if test="user_id != null">
+            and a.user_id = #{user_id}
+        </if>
+        <if test="send_type != null">
+            and b.send_type = #{send_type}
+        </if>
+        <if test="referrer != null">
+            and a.referrer = #{referrer}
+        </if>
+        <if test="source_key != null">
+            and a.source_key = #{source_key}
+        </if>
+        <if test="order_id != null">
+            and a.order_id = #{order_id}
+        </if>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+            <otherwise>
+                order by id desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
 
     <select id="queryList" resultMap="userCouponMap">
         select a.* from nideshop_user_coupon a
@@ -43,6 +79,9 @@
         <if test="source_key != null">
             and a.source_key = #{source_key}
         </if>
+        <if test="order_id != null">
+            and a.order_id = #{order_id}
+        </if>
         <choose>
             <when test="sidx != null and sidx.trim() != ''">
                 order by ${sidx} ${order}
@@ -57,7 +96,13 @@
     </select>
 
     <select id="queryTotal" resultType="int">
-		select count(*) from nideshop_user_coupon 
+		select count(*) from nideshop_user_coupon where 1=1
+		<if test="user_id != null">
+            and user_id = #{user_id}
+        </if>
+        <if test="order_id != null">
+            and order_id = #{order_id}
+        </if>
 	</select>
 
     <insert id="save" parameterType="com.platform.entity.UserCouponVo" useGeneratedKeys="true" keyProperty="id">

@@ -9,6 +9,7 @@ import com.platform.entity.CouponGoodsEntity;
 import com.platform.entity.UserCouponEntity;
 import com.platform.entity.UserEntity;
 import com.platform.service.CouponService;
+import com.platform.utils.CharUtil;
 import com.platform.utils.R;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
@@ -98,8 +99,9 @@ public class CouponServiceImpl implements CouponService {
                 UserCouponEntity userCouponVo = new UserCouponEntity();
                 userCouponVo.setUserId(userId);
                 userCouponVo.setCouponId(couponId);
-                userCouponVo.setCouponNumber("1");
+                userCouponVo.setCouponNumber(CharUtil.getRandomString(12));
                 userCouponVo.setAddTime(new Date());
+                userCouponVo.setOrderId(0);
                 userCouponDao.save(userCouponVo);
                 if (sendSms) {
                     UserEntity userEntity = userDao.queryObject(userId);

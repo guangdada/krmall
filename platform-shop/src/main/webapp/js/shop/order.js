@@ -195,6 +195,29 @@ let vm = new Vue({
                 });
             });
         },
+        cancel: function (event) {
+            let id = getSelectedRow();
+            if (id == null) {
+                return;
+            }
+            confirm('确定取消？', function () {
+                $.ajax({
+                    type: "POST",
+                    url: "../order/cancel",
+                    contentType: "application/json",
+                    data: JSON.stringify(id),
+                    success: function (r) {
+                        if (r.code == 0) {
+                            alert('操作成功', function (index) {
+                                $("#jqGrid").trigger("reloadGrid");
+                            });
+                        } else {
+                            alert(r.msg);
+                        }
+                    }
+                });
+            });
+        },
         saveOrUpdate: function (event) {
             $.ajax({
                 type: "POST",

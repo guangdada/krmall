@@ -35,7 +35,7 @@
         <result property="payTime" column="pay_time"/>
         <result property="freightPrice" column="freight_price"/>
         <result property="couponId" column="coupon_id"/>
-        <result property="parentId" column="parent_id"/>
+        <result property="groupGoodsId" column="group_goods_id"/>
         <result property="couponPrice" column="coupon_price"/>
         <result property="callbackStatus" column="callback_status"/>
         <result property="orderType" column="order_type"/>
@@ -133,7 +133,7 @@
 			`pay_time`, 
 			`freight_price`, 
 			`coupon_id`, 
-			`parent_id`, 
+			`group_goods_id`, 
 			`coupon_price`, 
 			`callback_status`,
 			`order_type`
@@ -169,7 +169,7 @@
 			#{payTime}, 
 			#{freightPrice}, 
 			#{couponId}, 
-			#{parentId}, 
+			#{groupGoodsId}, 
 			#{couponPrice}, 
 			#{callbackStatus},
 			#{orderType}
@@ -208,7 +208,7 @@
             <if test="payTime != null">`pay_time` = #{payTime},</if>
             <if test="freightPrice != null">`freight_price` = #{freightPrice},</if>
             <if test="couponId != null">`coupon_id` = #{couponId},</if>
-            <if test="parentId != null">`parent_id` = #{parentId},</if>
+            <if test="groupGoodsId != null">`group_goods_id` = #{groupGoodsId},</if>
             <if test="couponPrice != null">`coupon_price` = #{couponPrice},</if>
             <if test="callbackStatus != null">`callback_status` = #{callbackStatus},</if>
             <if test="orderType != null">`order_type` = #{orderType}</if>

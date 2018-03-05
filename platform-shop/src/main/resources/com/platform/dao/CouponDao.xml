@@ -15,6 +15,7 @@
         <result property="useStartDate" column="use_start_date"/>
         <result property="useEndDate" column="use_end_date"/>
         <result property="minGoodsAmount" column="min_goods_amount"/>
+        <result property="point" column="point"/>
     </resultMap>
 
     <select id="queryObject" resultType="com.platform.entity.CouponEntity">
@@ -29,7 +30,8 @@
 			`send_end_date`,
 			`use_start_date`,
 			`use_end_date`,
-			`min_goods_amount`
+			`min_goods_amount`,
+			`point`
 		from nideshop_coupon
 		where id = #{id}
 	</select>
@@ -46,7 +48,8 @@
         `send_end_date`,
         `use_start_date`,
         `use_end_date`,
-        `min_goods_amount`
+        `min_goods_amount`,
+        `point`
         from nideshop_coupon
         WHERE 1=1
         <if test="name != null and name.trim() != ''">
@@ -81,7 +84,8 @@
 			`send_end_date`,
 			`use_start_date`,
 			`use_end_date`,
-			`min_goods_amount`)
+			`min_goods_amount`,
+			`point`)
 		values(
 			#{name},
 			#{typeMoney},
@@ -92,7 +96,8 @@
 			#{sendEndDate},
 			#{useStartDate},
 			#{useEndDate},
-			#{minGoodsAmount})
+			#{minGoodsAmount},
+			#{point})
 	</insert>
 
     <update id="update" parameterType="com.platform.entity.CouponEntity">
@@ -107,7 +112,8 @@
             <if test="sendEndDate != null">`send_end_date` = #{sendEndDate},</if>
             <if test="useStartDate != null">`use_start_date` = #{useStartDate},</if>
             <if test="useEndDate != null">`use_end_date` = #{useEndDate},</if>
-            <if test="minGoodsAmount != null">`min_goods_amount` = #{minGoodsAmount}</if>
+            <if test="minGoodsAmount != null">`min_goods_amount` = #{minGoodsAmount},</if>
+            <if test="point != null">`point` = #{point}</if>
         </set>
         where id = #{id}
     </update>

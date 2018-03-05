@@ -56,4 +56,12 @@ public class ApiGoodsService {
     public List<GoodsVo> queryCatalogProductList(Map<String, Object> map) {
         return goodsDao.queryCatalogProductList(map);
     }
+    
+    public int updateSellVolume(int id , int number){
+    	return goodsDao.updateSellVolume(number,id);
+    }
+    
+    public int updateGoodsNumber(int id , int number){
+    	return goodsDao.updateGoodsNumber(number,id);
+    }
 }

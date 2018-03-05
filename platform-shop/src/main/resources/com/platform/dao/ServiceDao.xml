@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.platform.dao.ServiceDao">
+
+    <resultMap type="com.platform.entity.ServiceEntity" id="serviceMap">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="job" column="job"/>
+        <result property="phone" column="phone"/>
+        <result property="remark" column="remark"/>
+        <result property="imageUrl" column="image_url"/>
+        <result property="visits" column="visits"/>
+        <result property="createTime" column="create_time"/>
+        <result property="sortnum" column="sortnum"/>
+        <result property="enabled" column="enabled"/>
+        <result property="isTop" column="is_top"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.platform.entity.ServiceEntity">
+		select
+			`id`,
+			`name`,
+			`job`,
+			`phone`,
+			`remark`,
+			`image_url`,
+			`visits`,
+			`create_time`,
+			`sortnum`,
+			`enabled`,
+			`is_top`
+		from nideshop_service
+		where id = #{id}
+	</select>
+
+	<select id="queryList" resultType="com.platform.entity.ServiceEntity">
+		select
+    		`id`,
+    		`name`,
+    		`job`,
+    		`phone`,
+    		`remark`,
+    		`image_url`,
+    		`visits`,
+    		`create_time`,
+    		`sortnum`,
+    		`enabled`,
+    		`is_top`
+		from nideshop_service
+		WHERE 1=1
+		<if test="name != null and name.trim() != ''">
+			AND name LIKE concat('%',#{name},'%')
+		</if>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from nideshop_service
+		WHERE 1=1
+        <if test="name != null and name.trim() != ''">
+            AND name LIKE concat('%',#{name},'%')
+        </if>
+	</select>
+	 
+	<insert id="save" parameterType="com.platform.entity.ServiceEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into nideshop_service(
+			`name`,
+			`job`,
+			`phone`,
+			`remark`,
+			`image_url`,
+			`visits`,
+			`create_time`,
+			`sortnum`,
+			`enabled`,
+			`is_top`)
+		values(
+			#{name},
+			#{job},
+			#{phone},
+			#{remark},
+			#{imageUrl},
+			#{visits},
+			#{createTime},
+			#{sortnum},
+			#{enabled},
+			#{isTop})
+	</insert>
+	 
+	<update id="update" parameterType="com.platform.entity.ServiceEntity">
+		update nideshop_service 
+		<set>
+			<if test="name != null">`name` = #{name}, </if>
+			<if test="job != null">`job` = #{job}, </if>
+			<if test="phone != null">`phone` = #{phone}, </if>
+			<if test="remark != null">`remark` = #{remark}, </if>
+			<if test="imageUrl != null">`image_url` = #{imageUrl}, </if>
+			<if test="visits != null">`visits` = #{visits}, </if>
+			<if test="createTime != null">`create_time` = #{createTime}, </if>
+			<if test="sortnum != null">`sortnum` = #{sortnum}, </if>
+			<if test="enabled != null">`enabled` = #{enabled}, </if>
+			<if test="isTop != null">`is_top` = #{isTop}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from nideshop_service where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from nideshop_service where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

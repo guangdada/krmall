@@ -87,6 +87,9 @@
             <Form-item label="最小商品金额" prop="minGoodsAmount">
                 <Input-number :min="0" v-model="coupon.minGoodsAmount" placeholder="最小商品金额" style="width: 188px;"/>
             </Form-item>
+            <Form-item label="兑换积分" prop="point">
+                <Input-number :min="0" v-model="coupon.point" placeholder="兑换积分" style="width: 188px;"/>
+            </Form-item>
             <Form-item>
                 <i-button type="primary" @click="handleSubmit('formValidate')">提交</i-button>
                 <i-button type="warning" @click="reload" style="margin-left: 8px"/>

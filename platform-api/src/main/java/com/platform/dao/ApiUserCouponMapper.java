@@ -1,7 +1,11 @@
 package com.platform.dao;
 
-import com.platform.entity.UserCouponVo;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
+
+import com.platform.entity.UserCouponVo;
 
 /**
  * @author lipengjun
@@ -10,4 +14,6 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface ApiUserCouponMapper extends BaseDao<UserCouponVo> {
     UserCouponVo queryByCouponNumber(@Param("coupon_number") String coupon_number);
+    
+    List<Map<String,Object>> queryListMap(Map<String, Object> map);
 }

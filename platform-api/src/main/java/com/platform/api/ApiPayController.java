@@ -1,28 +1,5 @@
 package com.platform.api;
 
-import com.platform.annotation.LoginUser;
-import com.platform.entity.OrderGoodsVo;
-import com.platform.entity.OrderVo;
-import com.platform.entity.UserVo;
-import com.platform.service.ApiOrderGoodsService;
-import com.platform.service.ApiOrderService;
-import com.platform.util.ApiBaseAction;
-import com.platform.util.wechat.WechatRefundApiResult;
-import com.platform.util.wechat.WechatUtil;
-import com.platform.utils.CharUtil;
-import com.platform.utils.DateUtils;
-import com.platform.utils.MapUtils;
-import com.platform.utils.ResourceUtil;
-import com.platform.utils.XmlUtil;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -31,6 +8,33 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.platform.annotation.LoginUser;
+import com.platform.entity.OrderGoodsVo;
+import com.platform.entity.OrderVo;
+import com.platform.entity.UserVo;
+import com.platform.service.ApiGoodsService;
+import com.platform.service.ApiOrderGoodsService;
+import com.platform.service.ApiOrderService;
+import com.platform.util.ApiBaseAction;
+import com.platform.utils.CharUtil;
+import com.platform.utils.DateUtils;
+import com.platform.utils.MapUtils;
+import com.platform.utils.ResourceUtil;
+import com.platform.utils.XmlUtil;
+import com.platform.utils.wechat.WechatRefundApiResult;
+import com.platform.utils.wechat.WechatUtil;
 
 /**
  * 作者: @author Harmon <br>
@@ -45,6 +49,8 @@ public class ApiPayController extends ApiBaseAction {
     private ApiOrderService orderService;
     @Autowired
     private ApiOrderGoodsService orderGoodsService;
+    @Autowired
+    private ApiGoodsService apiGoodsService;
 
     /**
      */
@@ -59,21 +65,19 @@ public class ApiPayController extends ApiBaseAction {
      */
     @RequestMapping("prepay")
     public Object payPrepay(@LoginUser UserVo loginUser, Integer orderId) {
-        //
+        //判断订单支付状态
         OrderVo orderInfo = orderService.queryObject(orderId);
-
         if (null == orderInfo) {
             return toResponsObject(400, "订单已取消", "");
         }
-
-        if (orderInfo.getPay_status() != 0) {
+        if (orderInfo.getOrder_status() > 0 || orderInfo.getPay_status() > 1) {
             return toResponsObject(400, "订单已支付，请不要重复操作", "");
         }
 
         String nonceStr = CharUtil.getRandomString(32);
 
         //https://pay.weixin.qq.com/wiki/doc/api/wxa/wxa_api.php?chapter=7_7&index=3
-        Map<Object, Object> resultObj = new TreeMap();
+        Map<Object, Object> resultObj = new TreeMap<Object, Object>();
 
         try {
             Map<Object, Object> parame = new TreeMap<Object, Object>();
@@ -85,7 +89,7 @@ public class ApiPayController extends ApiBaseAction {
             parame.put("nonce_str", randomStr);
             // 商户订单编号
             parame.put("out_trade_no", orderId);
-            Map orderGoodsParam = new HashMap();
+            Map<String, Object> orderGoodsParam = new HashMap<String, Object>();
             orderGoodsParam.put("order_id", orderId);
             // 商品描述
             parame.put("body", "超市-支付");
@@ -198,6 +202,16 @@ public class ApiPayController extends ApiBaseAction {
                     orderInfo.setOrder_status(201);
                 }
                 orderService.update(orderInfo);
+                
+                Map<String,Object> orderGoodsParam = new HashMap<String,Object>();
+                orderGoodsParam.put("order_id", orderInfo.getId());
+                //订单的商品销量修改
+                List<OrderGoodsVo> orderGoods = orderGoodsService.queryList(orderGoodsParam);
+                if(CollectionUtils.isNotEmpty(orderGoods)){
+                	for(OrderGoodsVo goods : orderGoods){
+                		apiGoodsService.updateSellVolume(goods.getGoods_id(), goods.getNumber());
+                	}
+                }
                 response.getWriter().write(setXml("SUCCESS", "OK"));
             }
         } catch (Exception e) {

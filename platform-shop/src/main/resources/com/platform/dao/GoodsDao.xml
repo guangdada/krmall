@@ -214,6 +214,18 @@
         #{limitTime}
         )
     </insert>
+    
+    <!-- 修改库存 -->
+    <update id="updateSellVolume">
+    	update nideshop_goods set sell_volume = sell_volume + #{number} 
+    	where id = #{id} 
+    </update>
+    
+    <!-- 修改销量-->
+    <update id="updateGoodsNumber">
+    	update nideshop_goods set goods_number = goods_number + #{number} 
+    	where id = #{id} 
+    </update>
 
     <update id="update" parameterType="com.platform.entity.GoodsEntity">
         update nideshop_goods

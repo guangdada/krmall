@@ -19,6 +19,9 @@
         <result property="register_ip" column="register_ip"/>
         <result property="avatar" column="avatar"/>
         <result property="weixin_openid" column="weixin_openid"/>
+        <result property="signDate" column="sign_date"/>
+        <result property="points" column="points"/>
+        <result property="signDays" column="sign_days"/>
     </resultMap>
 
     <select id="queryObject" resultMap="userMap">
@@ -110,7 +113,10 @@
             <if test="mobile != null">`mobile` = #{mobile},</if>
             <if test="register_ip != null">`register_ip` = #{register_ip},</if>
             <if test="avatar != null">`avatar` = #{avatar},</if>
-            <if test="weixin_openid != null">`weixin_openid` = #{weixin_openid}</if>
+            <if test="weixin_openid != null">`weixin_openid` = #{weixin_openid},</if>
+            <if test="signDate != null">`sign_date` = #{signDate},</if>
+            <if test="points != null">`points` = #{points},</if>
+            <if test="signDays != null">`sign_days` = #{signDays}</if>
         </set>
         where id = #{userId}
     </update>

@@ -78,14 +78,14 @@ public class OrderEntity implements Serializable {
     private Integer freightPrice;
     //使用的优惠券id
     private Integer couponId;
-    //
-    private Integer parentId;
+    //团购商品id
+    private Integer groupGoodsId;
     //优惠价格
     private BigDecimal couponPrice;
     //
     private String callbackStatus;
 
-    //订单类型 1：普通订单 2：团购订单 3：砍价订单
+    //订单类型 1：普通订单 2：团购订单 3：限时购订单
     private String orderType;
 
     //
@@ -513,21 +513,15 @@ public class OrderEntity implements Serializable {
         return couponId;
     }
 
-    /**
-     * 设置：
-     */
-    public void setParentId(Integer parentId) {
-        this.parentId = parentId;
-    }
+    public Integer getGroupGoodsId() {
+		return groupGoodsId;
+	}
 
-    /**
-     * 获取：
-     */
-    public Integer getParentId() {
-        return parentId;
-    }
+	public void setGroupGoodsId(Integer groupGoodsId) {
+		this.groupGoodsId = groupGoodsId;
+	}
 
-    /**
+	/**
      * 设置：优惠价格
      */
     public void setCouponPrice(BigDecimal couponPrice) {

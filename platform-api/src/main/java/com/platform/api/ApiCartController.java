@@ -387,6 +387,12 @@ public class ApiCartController extends ApiBaseAction {
 		// 商品总价
 		BigDecimal goodsTotalPrice = (BigDecimal) ((HashMap) cartData.get("cartTotal")).get("checkedGoodsAmount");
 
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("user_id", loginUser.getUserId());
+		map.put("order_id", 0); // 未使用状态
+		int coupons = apiUserCouponService.queryTotal(map);
+		
 		// 使用优惠券减免的金额
 		BigDecimal couponPrice = new BigDecimal(0.00);
 		if (!StringUtils.isNullOrEmpty(couponNumber)) {
@@ -411,6 +417,7 @@ public class ApiCartController extends ApiBaseAction {
 		resultObj.put("goodsTotalPrice", goodsTotalPrice);
 		resultObj.put("orderTotalPrice", orderTotalPrice);
 		resultObj.put("actualPrice", actualPrice);
+		resultObj.put("coupons", coupons);
 		return toResponsSuccess(resultObj);
 	}
 

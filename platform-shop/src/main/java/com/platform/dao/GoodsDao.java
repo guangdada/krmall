@@ -1,5 +1,7 @@
 package com.platform.dao;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.platform.entity.GoodsEntity;
 
 /**
@@ -11,4 +13,8 @@ import com.platform.entity.GoodsEntity;
  */
 public interface GoodsDao extends BaseDao<GoodsEntity> {
     Integer queryMaxId();
+    
+    int updateSellVolume(@Param("number") int number,@Param("id") int id);
+    
+    int updateGoodsNumber(@Param("number") int number,@Param("id") int id);
 }

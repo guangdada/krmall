@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.platform.dao.ApiSignMapper">
+    
+   	<resultMap id="signMap" type="com.platform.entity.SignVo">
+		<id column="id" property="id" />
+		<result column="times" property="times" />
+		<result column="score" property="score" />
+		<result column="once" property="once" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+		<result column="status" property="status" />
+	</resultMap>
+    
+    <select id="queryList" resultMap="signMap">
+        select * from nideshop_sign where status = 1 order by times desc
+    </select>
+
+
+    
+</mapper>

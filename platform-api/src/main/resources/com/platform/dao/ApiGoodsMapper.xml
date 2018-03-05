@@ -43,6 +43,27 @@
         <result property="limitTime" column="limitTime"/>
         <result property="arrival_date" column="arrival_date"/>
     </resultMap>
+    
+    <update id="update" parameterType="com.platform.entity.GoodsVo">
+    	update nideshop_goods
+    	<set>
+            <if test="goods_number != null">`goods_number` = #{goods_number},</if>
+            <if test="sell_volume != null">`sell_volume` = #{sell_volume}</if>
+        </set>
+        where id = #{id}
+    </update>
+    
+    <!-- 修改库存 -->
+    <update id="updateSellVolume">
+    	update nideshop_goods set sell_volume = sell_volume + #{number} 
+    	where id = #{id} 
+    </update>
+    
+    <!-- 修改销量-->
+    <update id="updateGoodsNumber">
+    	update nideshop_goods set goods_number = goods_number + #{number} 
+    	where id = #{id} 
+    </update>
 
     <select id="queryObject" resultMap="goodsMap">
 		select * from nideshop_goods where id = #{value}

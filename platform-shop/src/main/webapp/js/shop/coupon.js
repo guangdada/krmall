@@ -57,6 +57,7 @@ $(function () {
             }
             },
             {label: '最小商品金额', name: 'minGoodsAmount', index: 'min_goods_amount', width: 80},
+            {label: '兑换积分', name: 'point', index: 'point', width: 80},
             {
                 label: '操作', width: 70, sortable: false, formatter: function (value, col, row) {
                 if (row.sendType == 1 || row.sendType == 3) {

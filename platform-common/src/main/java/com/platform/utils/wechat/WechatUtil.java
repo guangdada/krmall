@@ -1,4 +1,4 @@
-package com.platform.util.wechat;
+package com.platform.utils.wechat;
 
 import com.alibaba.druid.support.logging.Log;
 import com.alibaba.druid.support.logging.LogFactory;

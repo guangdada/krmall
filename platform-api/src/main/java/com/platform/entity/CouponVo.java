@@ -53,8 +53,19 @@ public class CouponVo implements Serializable {
     private Integer enabled = 0;
     //转发次数
     private Integer min_transmit_num;
+    // 兑换积分
+    private Integer point;
 
-    public Integer getId() {
+    
+    public Integer getPoint() {
+		return point;
+	}
+
+	public void setPoint(Integer point) {
+		this.point = point;
+	}
+
+	public Integer getId() {
         return id;
     }
 

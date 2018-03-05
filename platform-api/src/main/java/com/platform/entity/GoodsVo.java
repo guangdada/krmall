@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 
 /**
  * @author lipengjun
@@ -88,9 +90,11 @@ public class GoodsVo implements Serializable {
     //是否限时购
     private Integer is_limitTime;
     //限时购付款时间
-    private String limitTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date limitTime;
     //配货时间
-    private String arrival_date;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date arrival_date;
 
     public Integer getId() {
         return id;
@@ -380,20 +384,19 @@ public class GoodsVo implements Serializable {
 		this.is_limitTime = is_limitTime;
 	}
 
-	public String getLimitTime() {
+	public Date getLimitTime() {
 		return limitTime;
 	}
 
-	public void setLimitTime(String limitTime) {
+	public void setLimitTime(Date limitTime) {
 		this.limitTime = limitTime;
 	}
 
-	public String getArrival_date() {
+	public Date getArrival_date() {
 		return arrival_date;
 	}
 
-	public void setArrival_date(String arrival_date) {
+	public void setArrival_date(Date arrival_date) {
 		this.arrival_date = arrival_date;
 	}
-    
 }

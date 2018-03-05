@@ -120,9 +120,22 @@ public class OrderController {
 
         return R.ok();
     }
+    
+    /**
+     * 退货
+     *
+     * @param id
+     * @return
+     */
+    @RequestMapping("/cancel")
+    @RequiresPermissions("order:sendGoods")
+    public R cancel(@RequestBody Integer id) {
+        orderService.cancelOrder(id);
+        return R.ok();
+    }
 
     /**
-     * 发货
+     * 配货
      *
      * @param order
      * @return

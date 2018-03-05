@@ -1,4 +1,4 @@
-package com.platform.util.wechat;
+package com.platform.utils.wechat;
 
 public class WechatRefundApiResult {
 	private String return_code;

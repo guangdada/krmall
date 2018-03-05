@@ -1,4 +1,4 @@
-package com.platform.util.wechat;
+package com.platform.utils.wechat;
 
 import com.platform.utils.ResourceUtil;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;

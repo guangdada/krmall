@@ -26,6 +26,10 @@ public class ApiUserCouponService {
     public List<UserCouponVo> queryList(Map<String, Object> map) {
         return userCouponDao.queryList(map);
     }
+    
+    public List<Map<String,Object>> queryListMap(Map<String, Object> map) {
+        return userCouponDao.queryListMap(map);
+    }
 
 
     public int queryTotal(Map<String, Object> map) {

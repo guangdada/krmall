@@ -40,8 +40,39 @@ public class UserVo implements Serializable {
     private String avatar;
     //微信Id
     private String weixin_openid;
+    // 积分
+    private Integer points;
+    // 连续签到天数
+    private Integer signDays;
+    // 最后签到日期
+    private Date signDate;
 
-    public Long getUserId() {
+    
+    public Integer getPoints() {
+		return points;
+	}
+
+	public void setPoints(Integer points) {
+		this.points = points;
+	}
+
+	public Integer getSignDays() {
+		return signDays;
+	}
+
+	public void setSignDays(Integer signDays) {
+		this.signDays = signDays;
+	}
+
+	public Date getSignDate() {
+		return signDate;
+	}
+
+	public void setSignDate(Date signDate) {
+		this.signDate = signDate;
+	}
+
+	public Long getUserId() {
         return userId;
     }
 

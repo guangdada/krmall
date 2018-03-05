@@ -36,7 +36,7 @@
         <result property="pay_time" column="pay_time"/>
         <result property="freight_price" column="freight_price"/>
         <result property="coupon_id" column="coupon_id"/>
-        <result property="parent_id" column="parent_id"/>
+        <result property="group_goods_id" column="group_goods_id"/>
         <result property="coupon_price" column="coupon_price"/>
         <result property="callback_status" column="callback_status"/>
         <result property="full_cut_price" column="full_cut_price"/>
@@ -104,10 +104,11 @@
 			`pay_time`,
 			`freight_price`,
 			`coupon_id`,
-			`parent_id`,
+			`group_goods_id`,
 			`coupon_price`,
 			`callback_status`,
-			`full_cut_price`
+			`full_cut_price`,
+			`order_type`
 		)
 		values
 		(
@@ -139,10 +140,11 @@
 			#{pay_time},
 			#{freight_price},
 			#{coupon_id},
-			#{parent_id},
+			#{group_goods_id},
 			#{coupon_price},
 			#{callback_status},
-			#{full_cut_price}
+			#{full_cut_price},
+			#{order_type}
 		)
 	</insert>
 
@@ -177,10 +179,11 @@
             <if test="pay_time != null">`pay_time` = #{pay_time},</if>
             <if test="freight_price != null">`freight_price` = #{freight_price},</if>
             <if test="coupon_id != null">`coupon_id` = #{coupon_id},</if>
-            <if test="parent_id != null">`parent_id` = #{parent_id},</if>
+            <if test="group_goods_id != null">`group_goods_id` = #{group_goods_id},</if>
             <if test="coupon_price != null">`coupon_price` = #{coupon_price},</if>
             <if test="callback_status != null">`callback_status` = #{callback_status}</if>
             <if test="full_cut_price != null">`full_cut_price` = #{full_cut_price},</if>
+            <if test="order_type != null">`order_type` = #{order_type},</if>
         </set>
         where id = #{id}
     </update>

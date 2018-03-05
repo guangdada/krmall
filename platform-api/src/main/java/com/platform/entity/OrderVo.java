@@ -86,16 +86,18 @@ public class OrderVo implements Serializable {
     private Integer freight_price;
     //使用的优惠券id
     private Integer coupon_id;
-    //
-    private Integer parent_id;
+    //团购商品id
+    private Integer goods_id;
     //优惠价格
     private BigDecimal coupon_price;
+    //订单类型  1普通订单 2团购订单
+    private Integer order_type;
     //
     private Integer callback_status;
     //
     private Integer goodsCount; //订单的商品
     private String order_status_text;//订单状态的处理
-    private Map handleOption; //可操作的选项
+    private Map<String,Object> handleOption; //可操作的选项
     private BigDecimal full_cut_price; //订单满减
     private String full_region;//区县
 
@@ -360,16 +362,16 @@ public class OrderVo implements Serializable {
     public void setCoupon_id(Integer coupon_id) {
         this.coupon_id = coupon_id;
     }
+    
+	public Integer getGoods_id() {
+		return goods_id;
+	}
 
-    public Integer getParent_id() {
-        return parent_id;
-    }
+	public void setGoods_id(Integer goods_id) {
+		this.goods_id = goods_id;
+	}
 
-    public void setParent_id(Integer parent_id) {
-        this.parent_id = parent_id;
-    }
-
-    public BigDecimal getCoupon_price() {
+	public BigDecimal getCoupon_price() {
         return coupon_price;
     }
 
@@ -401,26 +403,26 @@ public class OrderVo implements Serializable {
                     order_status_text = "未付款";
                     break;
                 case 201:
-                    order_status_text = "等待发货";
+                    order_status_text = "已付款";
                     break;
                 case 300:
-                    order_status_text = "待收货";
+                    order_status_text = "待取货";
                     break;
                 case 301:
                     order_status_text = "已完成";
                     break;
-                case 200:
+                /*case 200:
                     order_status_text = "已付款";
-                    break;
+                    break;*/
                 case 101:
                     order_status_text = "已取消";
                     break;
                 case 401:
-                    order_status_text = "已取消";
+                    order_status_text = "已退款";
                     break;
-                case 402:
+                /* case 402:
                     order_status_text = "已退货";
-                    break;
+                    break;*/
             }
         }
         return order_status_text;
@@ -431,16 +433,10 @@ public class OrderVo implements Serializable {
     }
 
     //
-    public Map getHandleOption() {
-        handleOption = new HashMap();
+    public Map<String,Object> getHandleOption() {
+        handleOption = new HashMap<String,Object>();
         handleOption.put("cancel", false);//取消操作
-        handleOption.put("delete", false);//删除操作
         handleOption.put("pay", false);//支付操作
-        handleOption.put("comment", false);//评论操作
-        handleOption.put("delivery", false);//确认收货操作
-        handleOption.put("confirm", false);//完成订单操作
-        handleOption.put("return", false); //退换货操作
-        handleOption.put("buy", false); //再次购买
 
         //订单流程：　下单成功－》支付订单－》发货－》收货－》评论
         //订单相关状态字段设计，采用单个字段表示全部的订单状态
@@ -448,12 +444,6 @@ public class OrderVo implements Serializable {
         //2xx 表示订单支付状态　201订单已付款，等待发货
         //3xx 表示订单物流相关状态　300订单已发货， 301用户确认收货
         //4xx 表示订单退换货相关的状态　401 没有发货，退款　402 已收货，退款退货
-
-        //如果订单已经取消或是已完成，则可删除和再次购买
-        if (order_status == 101) {
-//            handleOption.put("delete", true);
-            handleOption.put("buy", true);
-        }
 
         //如果订单没有被取消，且没有支付，则可支付，可取消
         if (order_status == 0) {
@@ -465,23 +455,10 @@ public class OrderVo implements Serializable {
         if (order_status == 201) {
             handleOption.put("cancel", true);
         }
-
-        //如果订单已经发货，没有收货，则可收货操作和退款、退货操作
-        if (order_status == 300) {
-//            handleOption.put("cancel", true);
-            handleOption.put("confirm", true);
-//            handleOption.put("return", true);
-        }
-
-        //如果订单已经支付，且已经收货，则可完成交易、评论和再次购买
-        if (order_status == 301) {
-            handleOption.put("comment", true);
-            handleOption.put("buy", true);
-        }
         return handleOption;
     }
 
-    public void setHandleOption(Map handleOption) {
+    public void setHandleOption(Map<String,Object> handleOption) {
         this.handleOption = handleOption;
     }
 
@@ -508,4 +485,13 @@ public class OrderVo implements Serializable {
     public void setShipping_no(String shipping_no) {
         this.shipping_no = shipping_no;
     }
+
+	public Integer getOrder_type() {
+		return order_type;
+	}
+
+	public void setOrder_type(Integer order_type) {
+		this.order_type = order_type;
+	}
+    
 }

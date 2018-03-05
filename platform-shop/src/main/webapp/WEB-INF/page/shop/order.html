@@ -17,19 +17,19 @@
                     <i-option value="101">订单已取消</i-option>
                     <i-option value="102">订单已删除</i-option>
                     <i-option value="201">订单已付款</i-option>
-                    <i-option value="300">订单已发货</i-option>
+                    <i-option value="300">订单已配货</i-option>
                     <i-option value="301">用户确认收货</i-option>
                     <i-option value="401">退款</i-option>
                     <i-option value="402">完成</i-option>
                 </i-select>
             </i-col>
-            <!--<i-col span="4">-->
-                <!--<i-select v-model="q.orderType">-->
-                    <!--<i-option value="1">普通订单</i-option>-->
-                    <!--<i-option value="2">团购订单</i-option>-->
-                    <!--<i-option value="3">砍价订单</i-option>-->
-                <!--</i-select>-->
-            <!--</i-col>-->
+            <i-col span="4">
+                <i-select v-model="q.orderType">
+                    <i-option value="1">普通订单</i-option>
+                    <i-option value="2">团购订单</i-option>
+                    <i-option value="3">限时购订单</i-option>
+                </i-select>
+            </i-col>
             <i-button @click="query">查询</i-button>
             #if($shiro.hasPermission("order:sendGoods"))
             <i-button type="warning" @click="sendGoods">发货</i-button>
@@ -37,6 +37,7 @@
             #if($shiro.hasPermission("order:confirm"))
             <i-button type="error" @click="confirm">确认收货</i-button>
             #end
+            <i-button type="error" @click="cancel">取消订单</i-button>
         </Row>
         <table id="jqGrid"></table>
         <div id="jqGridPager"></div>

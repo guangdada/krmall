@@ -38,7 +38,8 @@ public class CouponEntity implements Serializable {
     private Date useEndDate;
     //最小商品金额
     private BigDecimal minGoodsAmount;
-
+    // 兑换积分
+    private Integer point;
     /**
      * 设置：主键
      */
@@ -192,4 +193,13 @@ public class CouponEntity implements Serializable {
     public BigDecimal getMinGoodsAmount() {
         return minGoodsAmount;
     }
+
+	public Integer getPoint() {
+		return point;
+	}
+
+	public void setPoint(Integer point) {
+		this.point = point;
+	}
+    
 }
